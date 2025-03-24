@@ -1,0 +1,29 @@
+{
+  "name": "simplecms",
+  "version": "1.0.0",
+  "description": "- **프로젝트 이름** : simpleCMS  \r - **주요 기능**     :  \r   - 사용자 회원가입, 로그인, 로그아웃 (인증 기능)  \r   - 게시글 CRUD (게시글 작성, 조회, 수정, 삭제)  \r - **기술 스택**\r   - Backend         : Node.js, Express\r   - Database        : MongoDB, Mongoose\r   - Authentication  : express-session, bcrypt\r   - View Engine     : EJS\r   - Styling         : CSS\r   - Email           : Nodemailer (OAuth2 Gmail API)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "argon2": "^0.41.1",
+    "bcrypt": "^5.1.1",
+    "connect-mongo": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "googleapis": "^148.0.0",
+    "helmet": "^8.1.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.12.2",
+    "multer": "^1.4.5-lts.2",
+    "nodemailer": "^6.10.0",
+    "uuid": "^11.1.0"
+  }
+}
