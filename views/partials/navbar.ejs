@@ -1,0 +1,15 @@
+<nav class="navbar">
+    <a href="/">🏠 홈</a>
+
+    <% if (user) { %>
+        <!-- 로그아웃 버튼 (폼 제출 방식) -->
+        <form action="/api/auth/logout" method="POST" style="display: inline;">
+            <button type="submit" class="logout-btn">🚪 로그아웃</button>
+        </form>
+
+        <!-- ✅ 비밀번호 변경 버튼 추가 -->
+        <a href="/change-password" class="change-password-btn">🔑 비밀번호 변경</a>
+    <% } else { %>
+        <a href="/login" class="login-btn">🔑 로그인</a>
+    <% } %>
+</nav>

@@ -8,7 +8,7 @@ const {asyncWrapper} = require('./asyncHandler');
  * Argon2 알고리즘을 사용하여 비밀번호를 안전하게 암호화
  * 보안성을 위해 충분한 메모리 & 연산 비용 설정
  */
-const hashPassword  = asyncWrapper(async(password){
+const hashPassword  = asyncWrapper(async(password) => {
     return await argon2.hash(password, {
         type : argon2.argon2id, // 가장 강력한 Argon2 알고리즘 사용
         memoryCost : 2 ** 16,   // 64MB 메모리 사용 (보안 강화)
@@ -28,7 +28,7 @@ const hashPassword  = asyncWrapper(async(password){
  */
 const verifyPassword = asyncWrapper(async(hashedPassword, inputPassword) => {
     return await argon2.verify(hashedPassword, inputPassword);
-})
+});
 
 module.exports = {
     hashPassword,

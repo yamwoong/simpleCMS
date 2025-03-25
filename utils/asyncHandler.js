@@ -9,7 +9,7 @@ const asyncWrapper = (fn) => async(...args) => {
 };
 
 // Express 컨트롤러용 (req, res, next 사용)
-const asyncHandler = (fn) => async(req, resizeBy, next) => {
+const asyncHandler = (fn) => async(req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
 };
 

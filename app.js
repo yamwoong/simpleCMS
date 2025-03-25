@@ -7,11 +7,21 @@ const methodOverride = require('method-override');
 const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
+
 const notFoundHandler = require('./middlewares/notFoundHandler');
-const errorHandler = require("./middlewares/errorHandler");
+const errorHandler = require('./middlewares/errorHandler');
+const globalVars = require('./middlewares/globalVars');
+const authMiddleware = require('./middlewares/authMiddleware');
+
 
 const authUiRoutes = require('./routes/authUiRoutes');
 const authApiRoutes = require('./routes/authApiRoutes');
+
+const passwordUiRoutes = require('./routes/passwordUiRoutes');
+const passwordApiRoutes = require('./routes/passwordApiRoutes');
+
+const dashboardUiRoutes = require('./routes/dashboardUiRoutes');
+
 // 환경 변수 로드 (.env)
 dotenv.config();
 
@@ -27,6 +37,7 @@ app.use(express.json()); // JSON 요청 처리
 app.use(methodOverride('_method')); // HTML 폼에서 PUT, DELETE 사용
 app.use(express.static(path.join(__dirname, 'public'))); // 정적 파일 제공
 app.set('view engine', 'ejs'); // EJS 템플릿 엔진 설정
+
 
 /****************************************************************************************/
 
@@ -56,15 +67,30 @@ app.use(session({
 
 }));
 
+// 전역 변수 미들웨어 등록
+app.use(globalVars); // 세션 미들웨어를 먼저 등록한 후 globalVars를 실행해야함
+
+// 특정 경로 보호
+app.use('/dashboard', authMiddleware.requireAuth); // 세션 미들웨어를 먼저 등록한 후 실행
+
+/****************************************************************************************/
+
+
 /************************************라우터 설정(미들웨어 설정 후)*************************/
 
-// UI 라우트 (EJS 렌더링)
-app.use('/', authUiRoutes);
-
-// API 라우트 (JSON 응답)
+/************************************ API 라우트 (JSON 응답) ******************************/
 app.use('/api/auth', authApiRoutes);
 
+// app.use('/api/password', passwordApiRoutes);
+/******************************************************************************************/
 
+/************************************ UI 라우트 (EJS 렌더링) ******************************/
+app.use('/', authUiRoutes);
+app.use('/', passwordUiRoutes);
+/******************************************************************************************/
+
+/************************************ 특정 경로 보호 (인증 필요) **************************/
+app.use('/', dashboardUiRoutes); 
 /****************************************************************************************/
 
 /************************************에러 핸들링 미들웨어(가장 마지막)*********************/

@@ -1,0 +1,24 @@
+<%- include("../partials/navbar.ejs") %> <!-- 네비게이션 바 포함 -->
+
+<div class="container">
+    <h2>📝 회원가입</h2>
+
+    <% if (error) { %>
+        <p class="error"><%= error %></p> <!-- 에러 메시지 출력 -->
+    <% } %>
+
+    <form action="/api/auth/register" method="POST">
+        <label for="username">사용자명</label>
+        <input type="text" name="username" required>
+
+        <label for="email">이메일</label>
+        <input type="email" name="email" required>
+
+        <label for="password">비밀번호</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">회원가입</button>
+    </form>
+
+    <p>이미 회원이신가요? <a href="/login">로그인</a></p>
+</div>
