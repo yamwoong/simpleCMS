@@ -49,12 +49,21 @@ const renderLoginPage = (req, res) => {
 const loginUser = asyncWrapper(async(req, res) => {
     const {identifier, password} = req.body; // 사용자 입력
 
-    const user = await authService.authenticateUser(identifier, password); // 서비스 호출
+    try {
+        const user = await authService.authenticateUser(identifier, password); // 서비스 호출
 
-    // 로그인 성공 시 세션에 사용자 정보 저장
-    sessionUtils.setUserSession(req, user);
+        // 로그인 성공 시 세션에 사용자 정보 저장
+        sessionUtils.setUserSession(req, user);
 
-    res.redirect('/dashboard')
+        res.redirect('/dashboard');
+    } catch(err) {
+        // 5️⃣ 로그인 실패 시 다시 로그인 페이지로 (에러 메시지 포함)
+        return res.status(400).render("auth/login", {
+            error: err.message || "❌ 로그인에 실패했습니다. 다시 시도해주세요."
+        });
+    }
+
+    
 });
 
 /****************************************************************************************/
@@ -70,11 +79,37 @@ const logoutUser = asyncHandler(async(req, res) => {
 
 /****************************************************************************************/
 
+/*****************************Google OAuth 로그인 성공 후 처리****************************/
+/**
+ * ✅ Google OAuth 로그인 성공 후 처리
+ * @route GET /auth/google/callback
+ */
+const googleAuthCallback = (req, res) => {
+    try {
+        console.log("✅ [Google 로그인 성공]:", req.user);
+
+        // 🔹 세션 저장
+        sessionUtils.setUserSession(req, req.user);
+
+        // ✅ 세션 값 확인 (콘솔 출력)
+        console.log("🔍 [세션 데이터]:", req.session.user);
+
+        res.redirect('/dashboard');
+    } catch(err) {
+        console.error("❌ [Google 로그인 콜백 오류]:", err);
+        res.status(500).render("auth/login", { error: "로그인 처리 중 오류가 발생했습니다." });
+    }
+};
+
+/****************************************************************************************/
+
+
 
 module.exports = {
     renderRegisterPage,
     registerUser,
     renderLoginPage,
     loginUser,
-    logoutUser
+    logoutUser,
+    googleAuthCallback
 }

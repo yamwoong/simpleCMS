@@ -1,3 +1,5 @@
+const passport = require('passport');
+
 /**
  * 로그인 확인 미들웨어
  * 
@@ -15,4 +17,12 @@ const requireAuth = (req, res, next) => {
     next();
 };
 
-module.exports = {requireAuth};
+/**
+ * Google 로그인 인증 미들웨어
+ */
+const googleAuthMiddleware = passport.authenticate("google", { failureRedirect: "/login" });
+
+module.exports = {
+    requireAuth,
+    googleAuthMiddleware
+};

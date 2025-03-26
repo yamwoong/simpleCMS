@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     password : {
         type : String,
-        required : true,
+        required : false,
         select : false
     }, // 보안 강화를 위해 기본 조회에서 제외
     createdAt: {

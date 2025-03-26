@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/change-password', authMiddleware.requireAuth, passwordController.renderChangePasswordPage);
 
 // 비밀번호 찾기 페이지 (사용자가 아이디 입력)
-// router.get("/forgot-password", passwordController.renderForgotPasswordPage);
+router.get("/forgot-password", passwordController.renderForgotPasswordPage);
 
 // 비밀번호 재설정 페이지 (토큰을 포함한 URL)
 // router.get('/reset-password/:token', passwordController.renderResetPasswordPage);

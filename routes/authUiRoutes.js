@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require("passport");
 const authController = require('../controllers/authController');
 
 const router = express.Router();
@@ -15,5 +16,11 @@ router.get('/login', authController.renderLoginPage); // 로그인 페이지 렌
 /**************************************로그아웃 라우트************************************/
 router.get('/logout', authController.logoutUser); // 로그아웃 페이지 렌더링 (UI에서는 GET으로도 처리 가능)
 /****************************************************************************************/
+
+/**************************************Google 로그인 라우트********************************/
+// Google 로그인 페이지로 리디렉트 (사용자가 버튼 클릭 시)
+router.get('/auth/google', passport.authenticate('google'));
+/****************************************************************************************/
+
 
 module.exports = router;

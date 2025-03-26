@@ -8,11 +8,12 @@ const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 
+const passport = require("./config/passport");
+
 const notFoundHandler = require('./middlewares/notFoundHandler');
 const errorHandler = require('./middlewares/errorHandler');
 const globalVars = require('./middlewares/globalVars');
 const authMiddleware = require('./middlewares/authMiddleware');
-
 
 const authUiRoutes = require('./routes/authUiRoutes');
 const authApiRoutes = require('./routes/authApiRoutes');
@@ -26,6 +27,7 @@ const dashboardUiRoutes = require('./routes/dashboardUiRoutes');
 dotenv.config();
 
 const app = express();
+
 
 /************************************공통 미들웨어(DB 연결 전)*****************************/
 
@@ -67,7 +69,11 @@ app.use(session({
 
 }));
 
-// 전역 변수 미들웨어 등록
+//Passport 초기화 & 세션 설정 (세션 이후에 위치해야함)
+app.use(passport.initialize());
+app.use(passport.session());
+
+// 전역 변수 미들웨어 등록 (passport.session() 이후에 실행해야 함!)
 app.use(globalVars); // 세션 미들웨어를 먼저 등록한 후 globalVars를 실행해야함
 
 // 특정 경로 보호
@@ -80,8 +86,7 @@ app.use('/dashboard', authMiddleware.requireAuth); // 세션 미들웨어를 먼
 
 /************************************ API 라우트 (JSON 응답) ******************************/
 app.use('/api/auth', authApiRoutes);
-
-// app.use('/api/password', passwordApiRoutes);
+app.use('/api/password', passwordApiRoutes);
 /******************************************************************************************/
 
 /************************************ UI 라우트 (EJS 렌더링) ******************************/

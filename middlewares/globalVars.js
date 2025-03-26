@@ -1,4 +1,4 @@
-const sessionUtils= require("../utils/sessionUtils"); // 올바르게 불러오기
+const sessionUtils= require("../utils/sessionUtils");
 
 
 /**

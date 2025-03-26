@@ -5,11 +5,12 @@ const util = require("util");
  * @param {Object} user - 사용자 정보 객체
  */
 const setUserSession = (req, user) => {
-    req.session.user = {
-        id : user.id,
-        username : user.username,
-        email : user.email
-    };
+    // 세션 객체가 없는 경우 예외 처리 (안전성 ↑)
+    if (!req.session) return;
+
+    // 구조 분해 할당 적용 (깔끔하게 필요한 정보만 저장)
+    const { id, username, email } = user;
+    req.session.user = { id, username, email };
 };
 
 /**
