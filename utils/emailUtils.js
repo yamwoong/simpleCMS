@@ -1,17 +1,35 @@
-const nodemailer = require('nodemailer');
-const {google} = require('googleapis');
+const {createTransporter} = require('./transporter');
 const {emailConfig} = require('../config/config');
 
-console.log('emailConfig.EMAIL_CLIENT_ID', emailConfig.EMAIL_CLIENT_ID);
-
 /**
- * OAuth2 클라이언트 설정
- * - Gmail API 사용을 위한 OAuth2 인증 객체 생성
+ * 비밀번호 재설정 미메일 전송 함수
  */
-const OAuth2Client = new google.auth.OAuth2(
-    emailConfig.EMAIL_CLIENT_ID,     // Google 클라이언트 ID
-    emailConfig.EMAIL_CLIENT_SECRET, // Google 클라이언트 Secret
-    emailConfig.EMAIL_REDIRECT_URI   // OAuth 리디렉션 URI
-);
 
+const sendPasswordResetEmail = async(to, resetToken) => {
+    try {
+        const transporter = await createTransporter();
 
+        const mailOptions = {
+            from: `"MyProject Support" <${emailConfig.EMAIL_USER}>`,
+            to,
+            subject: "🔒 비밀번호 재설정 요청",
+            html: `
+                <h2>비밀번호 재설정 요청</h2>
+                <p>아래 링크를 클릭하여 비밀번호를 재설정하세요:</p>
+                <a href="${emailConfig.APP_URL}/reset-password?token=${encodeURIComponent(resetToken)}" target="_blank">
+                    비밀번호 재설정하기
+                </a>
+                <p>이 링크는 30분 후 만료됩니다.</p>
+            `,
+        };
+
+        const result = await transporter.sendMail(mailOptions);
+        console.log('이메일 전송 성공 : ', result);
+        return result;
+    } catch(error) {
+        console.log('이메일 전송 실패 : ', error.message);
+        throw new Error(`이메일 전송 실패: ${error.message}`);
+    }
+};
+
+module.exports = { sendPasswordResetEmail };

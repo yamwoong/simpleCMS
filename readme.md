@@ -120,6 +120,9 @@ my-project/
 - [ ] **게시글 신고 기능** (유저가 부적절한 게시글 신고 가능)  
 - [ ] **게시글 임시 저장 기능** (작성 중 저장 후 나중에 수정 가능)  
 
+- 유닛테스트도 사용하기
+
+
 ##  다음 프로젝트에 모듈 시스템 안내 (ESM 사용)
 본 프로젝트는 **ECMAScript Modules(ESM)**을 사용합니다.
 
@@ -190,5 +193,10 @@ my-project/
 - `method-override` → HTML 폼에서 PUT, DELETE 사용 가능  
 - `nodemailer` → 이메일 전송을 위한 라이브러리  
 - `googleapis` → OAuth2 인증을 위해 필요  
+
+### **테스트 & 디버깅 도구** 
+- `jest` → 단위 테스트 및 통합 테스트를 위한 JavaScript 테스트 프레임워크
+
+
 
 ---

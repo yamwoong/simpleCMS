@@ -4,7 +4,7 @@
   "description": "- **프로젝트 이름** : simpleCMS  \r - **주요 기능**     :  \r   - 사용자 회원가입, 로그인, 로그아웃 (인증 기능)  \r   - 게시글 CRUD (게시글 작성, 조회, 수정, 삭제)  \r - **기술 스택**\r   - Backend         : Node.js, Express\r   - Database        : MongoDB, Mongoose\r   - Authentication  : express-session, bcrypt\r   - View Engine     : EJS\r   - Styling         : CSS\r   - Email           : Nodemailer (OAuth2 Gmail API)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "express-session": "^1.18.1",
     "googleapis": "^148.0.0",
     "helmet": "^8.1.0",
+    "jest": "^29.7.0",
     "method-override": "^3.0.0",
     "mongoose": "^8.12.2",
     "multer": "^1.4.5-lts.2",
