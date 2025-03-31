@@ -1,6 +1,7 @@
 const passwordService = require("../services/passwordService");
 const { asyncWrapper } = require("../utils/asyncHandler");
 const sessionUtils= require("../utils/sessionUtils");
+const {requestPasswordReset} = require("../services/passwordService");
 
 
 /*******************************************비밀번호 변경 페이지 렌더링***********************/
@@ -44,9 +45,29 @@ const renderForgotPasswordPage = (req, res) => {
 
 /****************************************************************************************/
 
+/*******************************************비밀번호 재설정 이메일 전송********************/
+/**
+ * 비밀번호 변경 (POST)
+ */
+const sendResetEmail = asyncWrapper(async(req, res) => {
+    console.log('✅ sendResetEmail / req.body:', req.body);
+
+    const identifier = req.body.username;
+
+    console.log('✅ sendResetEmail / identifier:', identifier);
+    
+    await requestPasswordReset(identifier);
+
+    res.status(200).json({message : '비밀번호 재설정 이메일이 전송되었습니다'});
+});
+
+/****************************************************************************************/
+
+
 
 module.exports = { 
     renderChangePasswordPage,
     changePassword,
-    renderForgotPasswordPage
+    renderForgotPasswordPage,
+    sendResetEmail
 };

@@ -8,6 +8,7 @@ const {emailConfig} = require('../config/config');
 const createTransporter = async () => {
     try {
         const accessToken = await getAccessToken();
+        console.log('createTransporter / accessToken', accessToken);
 
         if (!accessToken) {
             throw new Error("OAuth2 액세스 토큰을 가져오지 못했습니다.");

@@ -23,7 +23,9 @@ const userSchema = new mongoose.Schema({
         type : Date,
         default : Date.now,
         immutable: true // 생성 이후 변경 불가능
-    }
+    },
+    resetPasswordToken : {type : String, default: null }, // 비밀번호 재설정 토큰
+    resetPasswordExpires : {type : Date, default: null } // 토큰 만료 시간
 }, { timestamps: true }); // 자동으로 createdAt, updatedAt 추가);
 
 /**

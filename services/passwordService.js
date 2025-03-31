@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const hashUtils = require('../utils/hashUtils');
-const {sendemail} = require('./emailService');
+const {sendPasswordResetEmail} = require('./emailService');
 const {asyncWrapper} = require('../utils/asyncHandler');
 const { generateResetTokenForUser } = require("../utils/tokenUtils");
 
@@ -33,6 +33,9 @@ const updatePassword = asyncWrapper(async(userId, newPassword) => {
  * @returns {Promise<object>} - 성공 메시지
  */
 const requestPasswordReset = asyncWrapper(async(identifier) => {
+
+    console.log('requestPasswordReset / identifier', identifier);
+
     // 사용자 조회 (이메일 또는 아이디 기반 검색)
     const user = await User.findOne({
         $or : [{email : identifier}, {username : identifier}]
@@ -42,10 +45,12 @@ const requestPasswordReset = asyncWrapper(async(identifier) => {
 
     // 비밀번호 재설정 토큰 생성 & 사용자 객체에 저장
     const resetToken = generateResetTokenForUser(user);
+
+    
     await user.save();
 
     // 비밀번호 재설정 이메일 전송
-    await sendResetEmail(user.email, resetToken);
+    await sendPasswordResetEmail(user.email, resetToken.resetToken);
 
     return { success: true, message: "비밀번호 재설정 링크를 이메일로 보냈습니다." };
 })

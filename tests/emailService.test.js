@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const { sendPasswordResetEmail } = require("../utils/emailUtils");
+const { sendPasswordResetEmail } = require("../services/emailService");
 const { emailConfig } = require("../config/config");
 
 // ✅ OAuth2 관련 유틸 함수를 Mocking

@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
  */
 
 const generateResetTokenForUser = (user) => {
-    console.log('user', user);
+    console.log('generateResetTokenForUser/ user', user);
     if(!user) throw new Error('Invalid user object provided for password reset');
 
     const resetToken = uuidv4(); // UUID 기반 토큰 생성
@@ -15,6 +15,7 @@ const generateResetTokenForUser = (user) => {
 
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = expires;
+    
     return {resetToken, expires};
 };
 
