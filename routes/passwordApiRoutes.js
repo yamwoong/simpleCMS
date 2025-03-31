@@ -3,6 +3,7 @@ const passwordController = require('../controllers/passwordController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const validatePasswordChange = require("../middlewares/validatePasswordChange");
 const {validateEmailAndToken} = require('../middlewares/validateRequest');
+const {validateResetTokenFromBody} = require('../middlewares/validateResetToken');
 
 
 const router = express.Router();
@@ -14,6 +15,6 @@ router.post('/change-password', authMiddleware.requireAuth, validatePasswordChan
 router.post("/forgot-password", validateEmailAndToken, passwordController.sendResetEmail);
 
 // 비밀번호 재설정 (토큰 검증 후 새 비밀번호 저장)
-// router.post('/reset-password', passwordController.resetPassword);
+router.post('/reset-password', validateResetTokenFromBody, passwordController.resetPassword);
 
 module.exports = router;

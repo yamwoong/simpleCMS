@@ -16,7 +16,12 @@ const registerUser = asyncWrapper(async({username, email, password}) => {
     if(existingUser) throw new Error('이미 가입된 이메일입니다');
 
     // 비밀번호 저장 (Mongoose `pre('save')` 훅에서 자동 해쉬)
-    const newUser = new User({username, email, password});
+    const newUser = new User({
+                                username,
+                                email,
+                                password,
+                                authProvider: 'local' // 로컬 회원가입 유저로 명시
+                            });
 
     await newUser.save();
     console.log(`회원가입 성공: ${username} (${email})`); // 로그 추가
@@ -50,7 +55,7 @@ const authenticateUser = asyncWrapper(async(identifier, password) => {
     }
 
 
-    console.log(`✅ 로그인 성공: ${user.username} (${user.email})`); // 로그 추가
+    console.log(`✅ 로그인 성공: ${user.username} (${user.email}) (${user.authProvider})`); // 로그 추가
 
     return {
         id : user._id,

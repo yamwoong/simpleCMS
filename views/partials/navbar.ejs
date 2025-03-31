@@ -1,5 +1,10 @@
 <nav class="navbar">
     <a href="/">🏠 홈</a>
+    
+
+    <% if (user) { %>
+        <p>현재 로그인한 사용자: <%= user.username %> | 인증 방식: <%= user.authProvider %></p>
+    <% } %>
 
     <% if (user) { %>
         <!-- 로그아웃 버튼 (폼 제출 방식) -->
@@ -8,7 +13,9 @@
         </form>
 
         <!-- ✅ 비밀번호 변경 버튼 추가 -->
-        <a href="/change-password" class="change-password-btn">🔑 비밀번호 변경</a>
+        <% if (user.authProvider === 'local') { %>
+            <a href="/change-password" class="change-password-btn">🔑 비밀번호 변경</a>
+        <% } %>
     <% } else { %>
         <a href="/login" class="login-btn">🔑 로그인</a>
     <% } %>

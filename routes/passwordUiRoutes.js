@@ -1,6 +1,7 @@
 const express = require('express');
 const passwordController = require('../controllers/passwordController');
 const authMiddleware = require('../middlewares/authMiddleware');
+const {validateResetTokenFromQuery} = require('../middlewares/validateResetToken');
 
 const router = express.Router();
 
@@ -11,6 +12,6 @@ router.get('/change-password', authMiddleware.requireAuth, passwordController.re
 router.get("/forgot-password", passwordController.renderForgotPasswordPage);
 
 // 비밀번호 재설정 페이지 (토큰을 포함한 URL)
-// router.get('/reset-password/:token', passwordController.renderResetPasswordPage);
+router.get('/reset-password', validateResetTokenFromQuery, passwordController.renderResetPasswordPage);
 
 module.exports = router;

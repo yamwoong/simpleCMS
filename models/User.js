@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema({
         required : false,
         select : false
     }, // 보안 강화를 위해 기본 조회에서 제외
+    authProvider: { 
+        type: String, 
+        enum: ['local', 'google'], 
+        default: 'local' 
+    }, // 회원가입 방식(local: 이메일/비밀번호, google: OAuth 로그인)
     createdAt: {
         type : Date,
         default : Date.now,

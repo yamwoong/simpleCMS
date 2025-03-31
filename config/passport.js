@@ -12,7 +12,7 @@ passport.use(
             clientID: config.GOOGLE_CLIENT_ID, // Google 클라이언트 ID
             clientSecret: config.GOOGLE_CLIENT_SECRET, // Google 클라이언트 Secret
             callbackURL: config.GOOGLE_REDIRECT_URI, // OAuth 콜백 URL (Google 로그인 후 리디렉트)
-            scope : ['profile', 'email']
+            scope : ['profile', 'email']            // 사용자 프로필 및 이메일 요청청
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -35,6 +35,7 @@ passport.use(
                     user = new User({
                         username: profile.displayName,  // Google 프로필 이름 사용
                         email,                          // Google 이메일 저장
+                        authProvider: 'google',         // 로그인 제공자 (google)
                         googleId: profile.id,           // Google 계정 고유 ID 저장
                     });
 
@@ -65,7 +66,7 @@ passport.deserializeUser(async(id, done) => {
         console.log("♻ [세션 복원] 사용자 ID:", id);
         const user = await User.findById(id);
         if(user) {
-            console.log("✅ [세션 복원 성공] 사용자 정보:", user.username);
+            console.log("✅ [세션 복원 성공] 사용자 정보:", user);
         } else {
             console.warn("⚠ [세션 복원 실패] 사용자 정보 없음");
         }

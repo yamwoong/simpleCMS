@@ -63,11 +63,42 @@ const sendResetEmail = asyncWrapper(async(req, res) => {
 
 /****************************************************************************************/
 
+/*******************************************비밀번호 재설정 페이지 렌더링******************/
+/**
+ * 비밀번호 재설정 페이지 렌더링 
+ */
+const renderResetPasswordPage = (req, res) => {
+    res.render('password/reset-password', { token: req.query.token });
+};
+
+/****************************************************************************************/
+
+/*******************************************비밀번호 재설정*******************************/
+/**
+ * 비밀번호 변경 (POST)
+ */
+const resetPassword = asyncWrapper(async(req, res) => {
+    const {password} = req.body;
+    const user = req.user; // validateResetToken 미들웨어에서 가져옴
+
+    if (!password) {
+        return res.status(400).json({ message: '비밀번호를 입력해주세요.' });
+    }
+
+    await passwordService.updatePasswordEmail(user, password);
+
+    res.status(200).json({message : '비밀번호가 성공적으로 변경되었습니다'});
+});
+
+/****************************************************************************************/
+
 
 
 module.exports = { 
     renderChangePasswordPage,
     changePassword,
     renderForgotPasswordPage,
-    sendResetEmail
+    sendResetEmail,
+    renderResetPasswordPage,
+    resetPassword
 };

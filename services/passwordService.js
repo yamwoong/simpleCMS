@@ -53,9 +53,22 @@ const requestPasswordReset = asyncWrapper(async(identifier) => {
     await sendPasswordResetEmail(user.email, resetToken.resetToken);
 
     return { success: true, message: "비밀번호 재설정 링크를 이메일로 보냈습니다." };
-})
+});
+
+/**
+ * 비밀번호 변경 & 토큰 삭제
+ */
+
+const updatePasswordEmail = async(user, newPassword) => {
+    user.password = newPassword;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await user.save();
+}
 
 module.exports = {
     updatePassword,
-    requestPasswordReset
+    requestPasswordReset,
+    updatePasswordEmail
 };
