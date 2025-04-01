@@ -60,7 +60,8 @@ const authenticateUser = asyncWrapper(async(identifier, password) => {
     return {
         id : user._id,
         username : user.username,
-        email : user.email
+        email : user.email,
+        authProvider : user.authProvider
     }; // 사용자 정보만 반환 (비밀번호 제외외)
 });
 

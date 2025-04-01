@@ -62,8 +62,9 @@ passport.serializeUser((user, done) => {
 
 // 🔹 [5] 세션에서 사용자 정보 복원 (요청마다 실행)
 passport.deserializeUser(async(id, done) => {
+    console.log("♻ [세션 복원] 사용자 ID:", id);
+    
     try {
-        console.log("♻ [세션 복원] 사용자 ID:", id);
         const user = await User.findById(id);
         if(user) {
             console.log("✅ [세션 복원 성공] 사용자 정보:", user);

@@ -52,6 +52,8 @@ const loginUser = asyncWrapper(async(req, res) => {
     try {
         const user = await authService.authenticateUser(identifier, password); // 서비스 호출
 
+        console.log('loginUser / user', user);
+
         // 로그인 성공 시 세션에 사용자 정보 저장
         sessionUtils.setUserSession(req, user);
 

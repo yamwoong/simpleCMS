@@ -13,6 +13,9 @@ const sessionUtils= require("../utils/sessionUtils");
  */
 
 const globalVars = (req, res, next) => {
+
+    console.log("🌍 [세션 전체] req.session:", req.session);
+    console.log("🌍 [Passport 세션] req.session.passport:", req.session.passport);
     // ✅ 로그인된 사용자 정보 전역 변수 설정
     res.locals.user = sessionUtils.getUserSession(req); // 세션에서 사용자 정보 가져오기
 

@@ -9,8 +9,8 @@ const setUserSession = (req, user) => {
     if (!req.session) return;
 
     // 구조 분해 할당 적용 (깔끔하게 필요한 정보만 저장)
-    const { id, username, email } = user;
-    req.session.user = { id, username, email };
+    const { id, username, email, authProvider} = user;
+    req.session.user = { id, username, email, authProvider};
 };
 
 /**
