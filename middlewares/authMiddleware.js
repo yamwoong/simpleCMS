@@ -9,10 +9,8 @@ const passport = require('passport');
  */
 
 const requireAuth = (req, res, next) => {
-    console.log("requireAuth🌍 [세션 전체] req.session:", req.session);
-console.log("requireAuth🌍 [Passport 세션] req.session.passport:", req.session.passport);
     // 세션에 'user' 정보가 있는지 확인 (로그인 여부 체크)
-    if(!req.session.user){
+    if(!req.isAuthenticated()){
         return res.redirect("/login"); // 로그인하지 않은 경우 → 로그인 페이지로 이동
     }
 
@@ -23,6 +21,7 @@ console.log("requireAuth🌍 [Passport 세션] req.session.passport:", req.sessi
  * Google 로그인 인증 미들웨어
  */
 const googleAuthMiddleware = passport.authenticate("google", { failureRedirect: "/login" });
+
 
 module.exports = {
     requireAuth,

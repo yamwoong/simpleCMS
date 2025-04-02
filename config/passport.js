@@ -1,9 +1,47 @@
 const passport = require('passport');
+const LocalStrategy = require('passport-local');
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require('../models/User');
 const {config} = require('../config/config');
+const argon2 = require('argon2');
+const {v4 : uuidv4} = require('uuid');
+const { verifyPassword } = require('../utils/hashUtils');
 
-console.log("🔍 Google OAuth Config:", config);
+console.log("Passport 인증 설정 시작");
+
+// [1] 로컬 로그인 전략 (이메일 + 비밀번호)
+passport.use(
+    new LocalStrategy(
+        {usernameField : 'identifier'}, // username을 기반으로 인증
+        async(identifier, password, done) => {
+            try{
+                console.log("🔹 [로컬 로그인 시도] 유저네임:", identifier);
+
+                // 🔹 이메일인지 사용자명인지 확인
+                const user = await User.findOne({
+                    $or: [{ email: identifier }, { username: identifier }],
+                }).select('+password'); // 비밀번호 필드 포함
+
+                if (!user) {
+                    console.warn("❌ [로그인 실패] 이메일 또는 사용자명이 존재하지 않음");
+                    return done(null, false, { message: "이메일 또는 사용자명을 확인하세요." });
+                }
+
+                const isValidPassword = await verifyPassword(user.password, password);
+
+                if (!isValidPassword) {
+                    console.warn(`❌ [로그인 실패] 비밀번호 불일치 (입력한 이메일: ${email})`);
+                    return done(null, false, { message: "비밀번호가 올바르지 않습니다." });
+                }
+
+                return done(null, user);
+            } catch(err) {
+                return done(err);
+            }
+        }
+    )
+);
+
 
 // 🔹 [1] Google OAuth 전략 설정 (사용자 인증 처리)
 passport.use(
@@ -32,8 +70,9 @@ passport.use(
                     console.log("🆕 [신규 사용자 발견] Google 계정으로 회원가입 진행");
 
                     // 🔹 [3] 신규 사용자 회원가입 (최초 로그인)
+                    const sanitizedUsername = profile.displayName.replace(/\s+/g, '_').replace(/[^\w]/g, '');
                     user = new User({
-                        username: profile.displayName,  // Google 프로필 이름 사용
+                        username: `${sanitizedUsername}_${uuidv4().slice(0, 8)}`, // 랜덤 문자열 추가하여 중복 방지 / Google 프로필 이름 사용
                         email,                          // Google 이메일 저장
                         authProvider: 'google',         // 로그인 제공자 (google)
                         googleId: profile.id,           // Google 계정 고유 ID 저장

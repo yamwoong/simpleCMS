@@ -1,6 +1,7 @@
 const authService = require('../services/authService');
 const { asyncWrapper, asyncHandler } = require("../utils/asyncHandler");
 const sessionUtils = require('../utils/sessionUtils');
+const passport = require('passport')
 
 /*******************************************회원가입 페이지 렌더링*************************/
 /**
@@ -37,6 +38,7 @@ const registerUser = asyncWrapper(async(req, res) => {
  * 로그인 페이지 렌더링 (GET)
  */
 const renderLoginPage = (req, res) => {
+    console.log('renderLoginPage/ req.user', req.user);
     res.render('auth/login');
 };
 
@@ -46,26 +48,33 @@ const renderLoginPage = (req, res) => {
 /**
  * 로그인 처리 (POST)
  */
-const loginUser = asyncWrapper(async(req, res) => {
-    const {identifier, password} = req.body; // 사용자 입력
+const loginUser = asyncWrapper(async (req, res, next) => {
+    console.log("🚀 [로컬 로그인 요청] 입력값:", req.body);
 
-    try {
-        const user = await authService.authenticateUser(identifier, password); // 서비스 호출
+    passport.authenticate("local", (err, user, info) => {
+        if (err) {
+            console.error("❌ [로컬 로그인 오류]:", err);
+            return next(err);
+        }
+        if (!user) {
+            console.warn("⚠ [로컬 로그인 실패] 이유:", info.message);
+            return res.status(400).render("auth/login", {
+                error: info.message || "❌ 로그인에 실패했습니다. 다시 시도해주세요."
+            });
+        }
 
-        console.log('loginUser / user', user);
+        // ✅ 로그인 성공 시 세션 저장
+        req.logIn(user, (err) => {
+            if (err) {
+                console.error("❌ [세션 저장 오류]:", err);
+                return next(err);
+            }
 
-        // 로그인 성공 시 세션에 사용자 정보 저장
-        sessionUtils.setUserSession(req, user);
+            console.log("✅ [로컬 로그인 성공] 세션에 저장됨!", user);
 
-        res.redirect('/dashboard');
-    } catch(err) {
-        // 5️⃣ 로그인 실패 시 다시 로그인 페이지로 (에러 메시지 포함)
-        return res.status(400).render("auth/login", {
-            error: err.message || "❌ 로그인에 실패했습니다. 다시 시도해주세요."
+            return res.redirect("/dashboard");
         });
-    }
-
-    
+    })(req, res, next);
 });
 
 /****************************************************************************************/

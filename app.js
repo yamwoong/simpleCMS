@@ -23,6 +23,10 @@ const passwordApiRoutes = require('./routes/passwordApiRoutes');
 
 const dashboardUiRoutes = require('./routes/dashboardUiRoutes');
 
+const postApiRoutes = require('./routes/postApiRoutes');
+const postUiRoutes = require('./routes/postUiRoutes');
+
+
 // 환경 변수 로드 (.env)
 dotenv.config();
 
@@ -60,10 +64,11 @@ connectDB();
 
 /************************************DB 기반 미들웨어(DB 연결 후)**************************/
 
+
 app.use(session({
     secret : process.env.SECRET_KEY,
     resave : false,
-    saveUninitialized : false,
+    saveUninitialized : true,
     store : MongoStore.create({mongoUrl : process.env.MONGO_URI}), // DB에 세션 저장
     cookie : {secure : false, httpOnly : true, maxAge : 1000 * 60 * 60}
 
@@ -87,11 +92,13 @@ app.use('/dashboard', authMiddleware.requireAuth); // 세션 미들웨어를 먼
 /************************************ API 라우트 (JSON 응답) ******************************/
 app.use('/api/auth', authApiRoutes);
 app.use('/api/password', passwordApiRoutes);
+app.use('/api/posts', postApiRoutes);
 /******************************************************************************************/
 
 /************************************ UI 라우트 (EJS 렌더링) ******************************/
 app.use('/', authUiRoutes);
 app.use('/', passwordUiRoutes);
+app.use('/', postUiRoutes);
 /******************************************************************************************/
 
 /************************************ 특정 경로 보호 (인증 필요) **************************/

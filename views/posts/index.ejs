@@ -1,0 +1,22 @@
+<%- include("../partials/navbar.ejs") %> <!-- 네비게이션 포함 -->
+
+<div class="container">
+    <h2>📌 게시글 목록</h2>
+    
+    <% if (user) { %>
+        <a href="/posts/new" class="btn">✏ 새 글 작성</a>
+    <% } %>
+
+    <% if (posts.length > 0) { %>
+        <ul>
+            <% posts.forEach(post => { %>
+                <li>
+                    <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                    <small>작성자: <%= post.author.username %> | 날짜: <%= post.createdAt.toLocaleDateString() %></small>
+                </li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>작성된 게시글이 없습니다.</p>
+    <% } %>
+</div>
