@@ -5,7 +5,7 @@ const { requireAuth } = require('../middlewares/authMiddleware');
 
 // 게시글 UI Page
 /**************************************전체 게시글 목록 페이지*************************/
-// router.get('/', postController.renderPostList);
+router.get('/posts', postController.renderPostList);
 /************************************************************************************/
 
 /**************************************새 글 작성 페이지******************************/

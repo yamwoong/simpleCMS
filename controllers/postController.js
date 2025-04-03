@@ -33,10 +33,31 @@ const createPost = asyncWrapper(async(req, res) => {
 
     console.log(`✅ 게시글 작성 성공: ${post.title}`);
 
-    res.status(201).json({ message: '게시글이 등록되었습니다.', post });
+    res.redirect("/posts"); // 게시글 목록으로 리다이렉트
 });
+
+/**
+ * 게시글 목록 페이지 렌더링
+ */
+const renderPostList = (req, res) => {
+    res.render('posts/index')
+};
+
+/**
+ * 전체 게시글 목록 조회 컨트롤러
+ * AJAX 요청을 받아 게시글을 JSON 형태로 응답
+ * 정렬 옵션을 쿼리 스트링에서 받아서 처리
+ */
+const getAllPosts = asyncWrapper(async(req, res) => {
+    const sortBy = req.query.sortBy || 'latest'; // 기본 정렬 : 최신순
+    const posts = await postService.getAllPosts(sortBy);
+    res.json({success : true, posts}); // JSON 형식으로 응답
+});
+
 
 module.exports = {
     createPost,
-    renderNewPost
+    renderNewPost,
+    renderPostList,
+    getAllPosts
 };
