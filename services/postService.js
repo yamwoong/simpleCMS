@@ -35,9 +35,27 @@ const getAllPosts = async(sortBy = 'latest') => {
     }
 
     return await Post.find().populate('author', 'username').sort(sortOption);
-}
+};
+
+/**
+ * 게시글 상세 조회 (조회수 증가 포함)
+ * @param {string} postId - 조회할 게시글 ID
+ * @returns {Promise<Object|null>} - 조회된 게시글 (없으면 null) 
+ */
+
+const getPostById = async(postId) => {
+    return await Post.findByIdAndUpdate(
+        postId,
+        {$inc : {views : 1}}, // 조회수 +1 증가
+        {new : true} // 업데이트된 데이터 반환
+    ).populate('author', 'username'); // 작성자 정보 포함
+};
+
+
+
 
 module.exports = {
     createPost,
-    getAllPosts
+    getAllPosts,
+    getPostById
 };

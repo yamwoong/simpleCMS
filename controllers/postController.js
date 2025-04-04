@@ -54,10 +54,27 @@ const getAllPosts = asyncWrapper(async(req, res) => {
     res.json({success : true, posts}); // JSON 형식으로 응답
 });
 
+/**
+ * 게시글 상세 조회 컨트롤러 (조회수 증가)
+ */
+
+const getPostById = asyncWrapper(async(req, res) => {
+    const {id} = req.params;
+    const post = await postService.getPostById(id);
+
+    if(!post) {
+        return res.status(404).json({success : false, message : '게시글을 찾을 수 없습니다'});
+    }
+
+    res.json({success : true, post}); // 조회된 게시글 JSON 응답
+});
+
+
 
 module.exports = {
     createPost,
     renderNewPost,
     renderPostList,
-    getAllPosts
+    getAllPosts,
+    getPostById
 };
