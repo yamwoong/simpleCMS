@@ -7,8 +7,17 @@ const {asyncWrapper} = require('../utils/asyncHandler');
  */
 
 const renderNewPost = (req, res) => {
-    console.log('renderNewPost / req.user', req.user);
-    res.render('posts/new');
+    const isAjax = req.headers['x-requested-with'] === 'XMLHttpRequest';
+
+    console.log(`📝 글쓰기 폼 요청 - AJAX 여부: ${isAjax}`);
+    
+    if (isAjax) {
+        // AJAX 요청이면 partial만 렌더링
+        return res.render('posts/_newForm', { user: req.user });
+    }
+
+    // 일반 요청이면 전체 페이지 렌더링
+    res.render('posts/new', { user: req.user });
 };
 
 /**
@@ -51,7 +60,19 @@ const renderPostList = (req, res) => {
 const getAllPosts = asyncWrapper(async(req, res) => {
     const sortBy = req.query.sortBy || 'latest'; // 기본 정렬 : 최신순
     const posts = await postService.getAllPosts(sortBy);
-    res.json({success : true, posts}); // JSON 형식으로 응답
+
+    const isAjax = req.headers['x-requested-with'] === 'XMLHttpRequest'; 
+    console.log("📦 요청 수신, isAjax:", isAjax);
+
+    if (isAjax) {
+        console.log("📦 AJAX 요청 → 부분 렌더링");
+        // AJAX 요청인 경우 → 부분 뷰만 렌더링
+        return res.render('posts/_list', { posts });
+    }
+
+    console.log("🌐 일반 요청 → 전체 페이지 렌더링");
+    // 일반 요청인 경우 → 전체 페이지 렌더링
+    res.render('posts/index', { posts });
 });
 
 /**
@@ -69,6 +90,24 @@ const getPostById = asyncWrapper(async(req, res) => {
     res.json({success : true, post}); // 조회된 게시글 JSON 응답
 });
 
+// 게시글 상세 보기 컨트롤러
+const getPostDetail = asyncWrapper(async (req, res) => {
+    const postId = req.params.id;
+
+    const post = await postService.getPostById(postId);
+    
+    if (!post) {
+        return res.status(404).send("Post not found");
+    }
+
+    if (req.xhr) {
+        // AJAX 요청이라면 → 상세 뷰 일부만 렌더링
+        return res.render('posts/_detail', { post });
+    }
+
+    // 일반 전체 페이지 렌더링
+    res.render('posts/detail', { post });
+});
 
 
 module.exports = {
@@ -76,5 +115,6 @@ module.exports = {
     renderNewPost,
     renderPostList,
     getAllPosts,
-    getPostById
+    getPostById,
+    getPostDetail
 };

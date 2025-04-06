@@ -1,17 +1,21 @@
-const initRouter = ({loadPostDetail, fetchPosts}) => {
+// 브라우저의 뒤로가기/ 앞으로가기 동작을 감지해서 SPA처럼 처리하는 라우터
+
+// 라우터 초기화 함수
+const initRouter = ({loadPostDetail, fetchPosts, loadNewForm}) => {
+    // popstate : 뒤로가기 / 앞으로가기 시 발생하는 이벤트트
     window.addEventListener('popstate', () => {
-        console.log("🔙 [popstate 발생] URL 변경 감지:", window.location.pathname);
+        const path = window.location.pathname;
+        console.log("🔙 popstate 이벤트 감지:");
 
-        const postId = window.location.pathname.split('/posts/')[1];
+        if(path === '/posts') {
+            fetchPosts('latest')// 목록 다시 렌더링
+        } else if(path.startsWith("/posts/") && !path.endsWith("/edit")) {
 
-        if(postId) {
-            loadPostDetail(postId);
-        } else {
-            document.querySelector(".container").innerHTML = `
-                <h1>📌 게시글 목록</h1>
-                <div id="post-list"></div>
-            `;
-            fetchPosts("latest");
+            const postId = path.split('/posts/')[1];
+
+            loadPostDetail(postId); // 상세 페이지 렌더링
+        } else if(path === "/posts/new") {
+            loadNewForm(); // 글쓰기 폼 렌더링
         }
     });
 };

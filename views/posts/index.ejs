@@ -1,26 +1,8 @@
-<%- include("../partials/navbar.ejs") %> <!-- 네비게이션 바 포함 -->
+<%- include("../partials/navbar.ejs") %>
 
-<div class="container">
-    <h1>📌 게시글 목록</h1>
-
-    <!-- 정렬 버튼 -->
-    <button id="sort-latest">최신순</button>
-    <button id="sort-popular">인기순</button>
-    <button id="sort-oldest">오래된순</button>
-
-    <!-- 새 게시글 작성 버튼 -->
-    <a href="/posts/new">
-        <button id="create-post">📝 새 게시글 작성</button>
-    </a>
-
-    <!-- 게시글 목록 -->
-    <div id="post-list">
-        <p>게시글을 불러오는 중...</p>
-    </div>
+<div id="content" class="container">
+    <p>게시글을 불러오는 중...</p>
 </div>
 
-<!-- 스타일 적용 -->
 <link rel="stylesheet" href="/css/style.css">
-
-<!-- AJAX 스크립트 -->
-<script type="module" src="/js/posts.js"></script>
+<script type="module" src="/js/main.js"></script>

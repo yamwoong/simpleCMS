@@ -1,17 +1,25 @@
 <%- include("../partials/navbar.ejs") %> <!-- 네비게이션 바 포함 -->
 
-<div class="container">
-    <h1>📝 게시글 상세</h1>
+<div class="container" id="post-detail">
+    <!-- 게시글 상세 내용이 JavaScript에서 동적으로 채워짐 -->
 
-    <div id="post-detail">
-        <p>게시글을 불러오는 중...</p>
-    </div>
+    <h1><%= post.title %></h1>
 
-    <a href="/posts">← 목록으로 돌아가기</a>
-</div>
+    <p><%= post.content %></p>
+
+    <small>
+        작성자: <%= post.author.username %> |
+        조회수: <%= post.views %> |
+        작성일: <%= new Date(post.createdAt).toLocaleDateString() %>
+    </small>
+
+    <!-- 목록으로 돌아가기 -->
+    <button id="back-to-list" style="margin-top: 16px;">← 목록으로 돌아가기</button>
+
+  </div>
 
 <!-- 스타일 적용 -->
 <link rel="stylesheet" href="/css/style.css">
 
 <!-- AJAX 스크립트 -->
-<script defer src="/js/postDetail.js"></script>
+<script type="module" src="/js/postDetail.js"></script>

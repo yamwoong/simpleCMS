@@ -1,0 +1,13 @@
+<!-- <%- include('../partials/header') %> -->
+
+<div id="post-detail">
+  <h1><%= post.title %></h1>
+  <p><%= post.content %></p>
+  <small>
+    작성자: <%= post.author.username %> | 조회수: <%= post.views %>
+  </small>
+  <br>
+  <a href="/posts">← 목록으로 돌아가기</a>
+</div>
+
+<%- include('../partials/footer') %>

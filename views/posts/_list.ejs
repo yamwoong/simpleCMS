@@ -1,0 +1,25 @@
+<!-- 정렬 버튼 -->
+<div id="sort-buttons">
+    <button id="sort-latest">최신순</button>
+    <button id="sort-popular">인기순</button>
+    <button id="sort-oldest">오래된순</button>
+</div>
+
+<!-- 새 게시글 작성 버튼 -->
+<a id="create-post-button" href="/posts/new">📝 새 게시글 작성</a>
+
+<!-- 게시글 목록 -->
+<div id="post-list">
+    <% if (posts.length === 0) { %>
+        <p>게시글이 없습니다.</p>
+    <% } else { %>
+        <ul>
+            <% posts.forEach(post => { %>
+                <li>
+                    <a href="/posts/<%= post._id %>"><%= post.title %></a>
+                    <small>작성자: <%= post.author.username %> | 조회수: <%= post.views %></small>
+                </li>
+            <% }) %>
+        </ul>
+    <% } %>
+</div>
